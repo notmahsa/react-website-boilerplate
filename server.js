@@ -3,6 +3,7 @@ import next from 'next';
 import compression from 'compression';
 import routes from 'routes';
 const port = parseInt(process.env.PORT, 10) || 3000
+const host = process.env.HOST | '0.0.0.0';
 const dev = process.env.NODE_ENV !== 'production'
 import bodyParser from 'body-parser';
 const app = next({ dev })
@@ -16,7 +17,7 @@ app.prepare()
   server.use(bodyParser.json());
   server.get('*', (req, res) => handle(req, res))
   // server
-  server.use(handle).listen(port, (err) => {
+  server.use(handle).listen(port, host, (err) => {
     if (err) throw err
     console.log(`> Ready on http://localhost:${port}`)
   })
