@@ -17,7 +17,7 @@ app.prepare()
   server.use(bodyParser.json());
   server.get('*', (req, res) => handle(req, res))
   // server
-  server.use(handle).listen(port, host, (err) => {
+  server.use(handle).listen(port, '0.0.0.0', (err) => {
     if (err) throw err
     console.log(`> Ready on http://${host}:${port}`)
   })
