@@ -1,8 +1,5 @@
-
-import { assign } from 'lodash';
-
 export const mapGlobals = (globals) => {
-    var response = {};
+    let response = {};
     globals.map((global) => {
       switch(global.slug){
         case 'contact-form':
@@ -26,12 +23,16 @@ export const mapGlobals = (globals) => {
       }
     })
     return response;
+
 };
 
 export const mapHome = (data) => {
   const home = {};
-  data.metafields.map((obj) => {
-    if(obj.key == 'carousel' || obj.key == 'blurbs'){
+  if (data === null || data.metadata === null) {
+    return null;
+  }
+  data.metadata.map((obj) => {
+    if(obj.key === 'carousel' || obj.key === 'blurbs'){
       home[obj.key] = obj.children
     }
     else
@@ -41,9 +42,12 @@ export const mapHome = (data) => {
 }
 
 export const mapFaqs = (data) => {
+  if (data === null || data.metadata === null) {
+    return null;
+  }
   const faqs = {};
   faqs.title = 'FAQs'
-  data.metafields.map((obj) => {
+  data.metadata.map((obj) => {
     faqs[obj.key] = obj.children
   });
   return faqs;

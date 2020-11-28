@@ -13,8 +13,8 @@ class SearchPage extends React.Component {
     const Response = await Request.getGlobals();
     const bucketResponse = await Request.getObjects();
     const searchResponse = await Request.getObject('search');
-    const bucket = bucketResponse.objects;
-    const search = searchResponse.object;
+    const bucket = bucketResponse;
+    const search = searchResponse;
     const globals = mapGlobals(Response.objects);
     return { globals, bucket, search };
   }
@@ -56,7 +56,7 @@ class SearchPage extends React.Component {
                 search_results.push(object)
         }
         if (!_.find(search_results, { _id: object._id })) {
-          object.metafields.forEach(metafield => {
+          object.metadata.forEach(metafield => {
             if(metafield.value.toLowerCase().indexOf(query) !== -1 && !_.find(search_results, { _id: object._id })) {
               object.teaser = object.content.replace(/(<([^>]+)>)/ig,"").substring(0, 300)
               if (object.type_slug === 'blogs')
@@ -64,7 +64,7 @@ class SearchPage extends React.Component {
               else
                 object.permalink = '/' + object.slug
                 search_results.push(object)
-            } 
+            }
           })
         }
       });

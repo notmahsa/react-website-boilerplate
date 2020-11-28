@@ -1,46 +1,27 @@
-import Cosmic from 'cosmicjs'
 import config from 'config'
 import axios from 'axios'
+import {Bucket, LookupObjects, LookupObjectBySlug} from '../components/content/Bucket';
 
-const api = Cosmic()
-const bucket = api.bucket({
-  slug: config.bucket.slug,
-  read_key: config.bucket.read_key,
-  write_key: config.bucket.write_key
-})
+const bucket = Bucket.bucket;
 
 function getGlobals() {
-  const params = {
-    type_slug: 'globals'
-  }
-  return bucket.getObjectsByType(params);
+  return LookupObjects(bucket, 'globals');
 }
 
 function getPages() {
-  const params = {
-    type_slug: 'pages'
-  };
-  return bucket.getObjectsByType(params);
+  return LookupObjects(bucket, 'pages')
 }
 
 function getObject(slug) {
-  const params = {
-    slug: slug
-  };
-  return bucket.getObject(params);
+  return LookupObjectBySlug(bucket, slug);
 }
 
 function getObjects() {
-  const params = {
-  };
-  return bucket.getObjects(params);
+  return bucket.objects;
 }
 
 function getBlogs() {
-  const params = {
-    type_slug: 'blogs'
-  };
-  return bucket.getObjectsByType(params);
+  return LookupObjects(bucket, 'blogs');
 }
 
 async function contactForm(data, contact) {
@@ -52,10 +33,10 @@ async function contactForm(data, contact) {
     }
   } else {
     try {
-      var message = 'Name:<br>' + data.name + '<br><br>' +
+      let message = 'Name:<br>' + data.name + '<br><br>' +
       'Subject:<br>' + contact.metadata.subject + '<br><br>' +
       'Message:<br>' + data.message + '<br><br>'
-      var email_data = {
+      let email_data = {
         from: data.email,
         to: contact.metadata.to,
         subject: data.name + ' sent you a new message',
@@ -64,7 +45,7 @@ async function contactForm(data, contact) {
       }
       const url = config.env.SENDGRID_FUNCTION_ENDPOINT
       await axios.post(url, email_data)
-      saveForm(data)
+      await saveForm(data)
       return {
         status: true,
         message: 'Success.'
@@ -80,11 +61,11 @@ async function contactForm(data, contact) {
   async function saveForm(data) {
     //Send to Cosmic
     const params = {
-      type_slug: 'form-submissions',
+      type_slug: 'form_submissions',
       title: data.name,
       content: data.message,
 
-      metafields: [{
+      metadata: [{
           title: 'Email',
           key: 'email',
           type: 'text',
@@ -99,7 +80,7 @@ async function contactForm(data, contact) {
       ]
     }
     // Write to Cosmic Bucket (Optional)
-    const response = await bucket.addObject(params)
+    console.log('PROMPTED SAVE FORM',  params)
   }
 }
 

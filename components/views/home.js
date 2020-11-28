@@ -3,13 +3,14 @@ import Link from 'next/link'
 class Home extends React.Component {
 	render() {
         const { home } = this.props;
+        console.log(home, "LOL");
 		return (
             <div>
                <div id="myCarousel" className="carousel slide" data-ride="carousel" style={{ marginTop: '-20px' }}>
                 <ol className="carousel-indicators">
-                    <li data-target="#myCarousel" data-slide-to="0" className="active"></li>
-                    <li data-target="#myCarousel" data-slide-to="1"></li>
-                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                    <li data-target="#myCarousel" data-slide-to="0" className="active" />
+                    <li data-target="#myCarousel" data-slide-to="1" />
+                    <li data-target="#myCarousel" data-slide-to="2" />
                 </ol>
 
                 <div className="carousel-inner" >
@@ -22,11 +23,11 @@ class Home extends React.Component {
                 </div>
 
                 <a className="left carousel-control" href="#myCarousel" data-slide="prev">
-                    <span className="glyphicon glyphicon-chevron-left"></span>
+                    <span className="glyphicon glyphicon-chevron-left" />
                     <span className="sr-only">Previous</span>
                 </a>
                 <a className="right carousel-control" href="#myCarousel" data-slide="next">
-                    <span className="glyphicon glyphicon-chevron-right"></span>
+                    <span className="glyphicon glyphicon-chevron-right" />
                     <span className="sr-only">Next</span>
                 </a>
             </div>
@@ -40,7 +41,7 @@ class Home extends React.Component {
         <div className="row">
             <div className="container col-xs-12">
             {
-                !!home.blurbs && home.blurbs.map((blurb, index) => 
+                !!home.blurbs && home.blurbs.map((blurb, index) =>
                     <div key={`blurb_${index}`} className="col-sm-4 text-center">
                         <div className="h3" style={{ marginBottom: '30px' }}>{blurb.value}</div>
                         <div className="img-circle center-block" style={{ background: `url(${`https://s3-us-west-2.amazonaws.com/cosmicjs/${blurb.children[0].value}`})`, backgroundSize:'cover', height: '300px', width: '300px' }}>

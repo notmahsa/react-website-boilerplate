@@ -1,5 +1,4 @@
 import React from 'react';
-import Router from 'next/router';
 
 import { mapGlobals, mapHome } from 'utils/helperFuncs';
 import Head from 'next/head';
@@ -31,6 +30,7 @@ class HomePage extends React.Component {
         home: props.home
     }
   }
+
 
 	render() {
 		return (
