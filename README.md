@@ -23,13 +23,13 @@ git clone https://github.com/cosmicjs/react-website-boilerplate
 cd react-website-boilerplate
 npm install
 
-# Run in development and serve at localhost:3000
+# Run in development and serve at 0.0.0.0:3000
 npm run dev
 
 # build for production
 npm run build
 
-# Run in production and serve at localhost:3000
+# Run in production and serve at 0.0.0.0:3000
 COSMIC_BUCKET=your-bucket-slug npm start
 ```
 Import the `bucket.json` file into your Cosmic JS Bucket.  To do this go to Your Bucket > Settings > Import / Export Data.
