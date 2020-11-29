@@ -2,8 +2,8 @@ import express from 'express';
 import next from 'next';
 import compression from 'compression';
 import routes from 'routes';
-const port = parseInt(process.env.PORT, 10) || 3000
-const host = process.env.HOST || '0.0.0.0';
+const port = parseInt(process.env.PORT, 10) || 10000
+const host = process.env.HOST || 'localhost';
 const dev = process.env.NODE_ENV !== 'production'
 import bodyParser from 'body-parser';
 const app = next({ dev })
