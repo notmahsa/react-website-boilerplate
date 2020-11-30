@@ -1,38 +1,40 @@
 import React from 'react';
 
-import { mapGlobals } from 'utils/helperFuncs';
+import {mapGlobals} from 'utils/helperFuncs';
 import Head from 'next/head';
 import Meta from 'components/widgets/Meta';
 import Search from 'components/views/search'
 import Header from 'components/views/partials/header'
 import Footer from 'components/views/partials/footer'
 import Request from 'utils/request';
+import {LookupItemInMetadata} from '../components/content/Bucket';
 
 class SearchPage extends React.Component {
-  static async getInitialProps({ req, query }) {
+  static async getInitialProps({req, query}) {
     const Response = await Request.getGlobals();
     const bucketResponse = await Request.getObjects();
     const searchResponse = await Request.getObject('search');
     const bucket = bucketResponse;
     const search = searchResponse;
     const globals = mapGlobals(Response.objects);
-    return { globals, bucket, search };
+    return {globals, bucket, search};
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-        header: props.globals.header,
-        contact_form: props.globals.contact_form,
-        nav: props.globals.nav,
-        social: props.globals.social,
-        contactInfo: props.globals.contact_info.metadata,
-        footer: props.globals.footer,
-        bucket: props.bucket,
-        searchResult: '',
-        searchField: '',
-        search: props.search
+      header: props.globals.header,
+      contact_form: props.globals.contact_form,
+      nav: props.globals.nav,
+      social: props.globals.social,
+      contactInfo: props.globals.contact_info.metadata,
+      footer: props.globals.footer,
+      bucket: props.bucket,
+      searchResult: '',
+      searchField: '',
+      search: props.search
     }
+    console.log(this.state);
   }
 
   handleChange = (event) => {
@@ -44,26 +46,25 @@ class SearchPage extends React.Component {
     let searchResult = this.state.searchResult;
     let search_results = [];
     let query = value;
-    if(!!query)
-    {
+    if (!!query) {
       objects.forEach(object => {
-        if(object.title.toLowerCase().indexOf(query) !== -1 || object.content.toLowerCase().indexOf(query) !== -1){
-          object.teaser = object.content.replace(/(<([^>]+)>)/ig,"").substring(0, 300)
+        if (object.title.toLowerCase().indexOf(query) !== -1 || object.content.toLowerCase().indexOf(query) !== -1) {
+          object.teaser = object.content.replace(/(<([^>]+)>)/ig, '').substring(0, 300)
           if (object.type_slug === 'blogs')
-                object.permalink = '/blog/' + object.slug
-              else
-                object.permalink = '/' + object.slug
-                search_results.push(object)
+            object.permalink = '/blog/' + object.slug
+          else
+            object.permalink = '/' + object.slug
+          search_results.push(object)
         }
-        if (!_.find(search_results, { _id: object._id })) {
+        if (!_.find(search_results, {_id: object._id})) {
           object.metadata.forEach(metafield => {
-            if(metafield.value.toLowerCase().indexOf(query) !== -1 && !_.find(search_results, { _id: object._id })) {
-              object.teaser = object.content.replace(/(<([^>]+)>)/ig,"").substring(0, 300)
+            if (metafield.value.toLowerCase().indexOf(query) !== -1 && !_.find(search_results, {_id: object._id})) {
+              object.teaser = object.content.replace(/(<([^>]+)>)/ig, '').substring(0, 300)
               if (object.type_slug === 'blogs')
                 object.permalink = '/blog/' + object.slug
               else
                 object.permalink = '/' + object.slug
-                search_results.push(object)
+              search_results.push(object)
             }
           })
         }
@@ -73,21 +74,25 @@ class SearchPage extends React.Component {
     this.setState({searchResult});
   }
 
-	render() {
-		return (
+  render() {
+    return (
       <Meta>
         <Head>
-          <title>Medical Professional ~ Cosmic JS Next Js App</title>
-          <meta name="description" content={ this.state.search.metadata.seo_description.value } />
-          <link rel="icon" type="image/png" href={`${this.state.header.metadata.favicon.imgix_url}?w=32`} sizes="32x32" />
-          <link rel="icon" type="image/png" href={`${this.state.header.metadata.favicon.imgix_url}?w=16`} sizes="16x16" />
+          <title>Delooman. Excellence in Design.</title>
+          <meta name="description" content={LookupItemInMetadata(this.state.search.metadata, 'seo_description').value}/>
+          <link rel="icon" type="image/png" href={`${LookupItemInMetadata(this.state.header.metadata, 'favicon').value}?w=32`}
+                sizes="32x32"/>
+          <link rel="icon" type="image/png" href={`${LookupItemInMetadata(this.state.header.metadata, 'favicon').value}?w=16`}
+                sizes="16x16"/>
         </Head>
-        <Header header={this.state.header} nav={this.state.nav} />
-        <Search handleChange={this.handleChange} searchField={this.state.searchField} searchResult={this.state.searchResult}></Search>
-        <Footer footer={this.state.footer} social={this.state.social} contactInfo={this.state.contactInfo} />
+        <Header header={this.state.header} nav={this.state.nav}/>
+        <Search handleChange={this.handleChange} searchField={this.state.searchField}
+                searchResult={this.state.searchResult}
+        />
+        <Footer footer={this.state.footer} social={this.state.social} contactInfo={this.state.contactInfo}/>
       </Meta>
-		);
-	}
+    );
+  }
 }
 
 export default SearchPage;

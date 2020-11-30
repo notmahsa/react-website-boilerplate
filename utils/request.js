@@ -1,19 +1,24 @@
 import config from 'config'
 import axios from 'axios'
-import {Bucket, LookupObjects, LookupObjectBySlug} from '../components/content/Bucket';
+import {
+  Bucket,
+  LookupObjectBySlugInBucket,
+  LookupObjectsInBucket
+} from '../components/content/Bucket';
 
 const bucket = Bucket.bucket;
 
 function getGlobals() {
-  return LookupObjects(bucket, 'globals');
+  return LookupObjectsInBucket('globals');
 }
 
 function getPages() {
-  return LookupObjects(bucket, 'pages')
+  return LookupObjectsInBucket('pages')
 }
 
 function getObject(slug) {
-  return LookupObjectBySlug(bucket, slug);
+  const obj = LookupObjectBySlugInBucket(slug);
+  return obj;
 }
 
 function getObjects() {
@@ -21,21 +26,24 @@ function getObjects() {
 }
 
 function getBlogs() {
-  return LookupObjects(bucket, 'blogs');
+  return LookupObjectsInBucket('blogs');
 }
 
 async function contactForm(data, contact) {
+  if (!data || !contact) {
+    return null;
+  }
 
   if (!config.env.SENDGRID_FUNCTION_ENDPOINT) {
     return {
       status: false,
-      message: "You must add a SendGrid Function Endpoint URL.  Contact your developer to add this value."
+      message: 'You must add a SendGrid Function Endpoint URL.  Contact your developer to add this value.'
     }
   } else {
     try {
       let message = 'Name:<br>' + data.name + '<br><br>' +
-      'Subject:<br>' + contact.metadata.subject + '<br><br>' +
-      'Message:<br>' + data.message + '<br><br>'
+        'Subject:<br>' + contact.metadata.subject + '<br><br>' +
+        'Message:<br>' + data.message + '<br><br>'
       let email_data = {
         from: data.email,
         to: contact.metadata.to,
@@ -50,27 +58,26 @@ async function contactForm(data, contact) {
         status: true,
         message: 'Success.'
       }
-    } catch(error) {
+    } catch (error) {
       return {
         status: false,
-        message: "You must add a SendGrid Function Endpoint URL.  Contact your developer to add this value."
+        message: 'You must add a SendGrid Function Endpoint URL.  Contact your developer to add this value.'
       }
     }
   }
 
   async function saveForm(data) {
-    //Send to Cosmic
     const params = {
       type_slug: 'form_submissions',
       title: data.name,
       content: data.message,
 
       metadata: [{
-          title: 'Email',
-          key: 'email',
-          type: 'text',
-          value: data.email
-        },
+        title: 'Email',
+        key: 'email',
+        type: 'text',
+        value: data.email
+      },
         {
           title: 'Phone',
           key: 'phone',
@@ -80,7 +87,7 @@ async function contactForm(data, contact) {
       ]
     }
     // Write to Cosmic Bucket (Optional)
-    console.log('PROMPTED SAVE FORM',  params)
+    console.log('PROMPTED SAVE FORM', params)
   }
 }
 

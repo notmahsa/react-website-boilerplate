@@ -1,39 +1,3 @@
-export const LookupObjects = (bucket=Bucket.bucket, typeSlug) => {
-  if (!bucket || !bucket.objects) {
-    return null;
-  }
-  return bucket.objects.filter((v) => {
-    return v.type_slug === typeSlug;
-  });
-}
-
-export const LookupObjectBySlug = (bucket=Bucket.bucket, slug) => {
-  if (!bucket || !bucket.objects) {
-    return null;
-  }
-  return bucket.objects.filter((v) => {
-    return v.slug === slug;
-  })[0];
-}
-
-export const LookupObjectBySlugInGroup = (group, slug) => {
-  if (!group) {
-    return null;
-  }
-  return group.filter((v) => {
-    return v.slug === slug;
-  });
-}
-
-export const LookupItemInMetadata = (metadata, key) => {
-  if (!metadata) {
-    return null;
-  }
-  return metadata.filter((v) => {
-    return v.key === key;
-  });
-}
-
 export const Bucket = {
   bucket: {
     _id: "5a9d3846031ee26c33735b6e",
@@ -374,7 +338,7 @@ export const Bucket = {
             children: false
           },
           {
-            value: "Medicenter | Your one-stop shop for all medical needs",
+            value: "Delooman. Excellence in Design.",
             key: "site_title",
             title: "Site Title",
             type: "text",
@@ -1131,3 +1095,39 @@ export const Bucket = {
     thumbnail: null
   }
 };
+
+export const LookupObjectsInBucket = (typeSlug) => {
+  if (!Bucket.bucket || !Bucket.bucket.objects) {
+    return null;
+  }
+  return Bucket.bucket.objects.filter((v) => {
+    return v.type_slug === typeSlug;
+  });
+}
+
+export const LookupObjectBySlugInBucket = (slug) => {
+  if (!Bucket.bucket || !Bucket.bucket.objects) {
+    return null;
+  }
+  return Bucket.bucket.objects.filter((v) => {
+    return v.slug === slug;
+  })[0];
+}
+
+export const LookupObjectBySlugInGroup = (group, slug) => {
+  if (!group) {
+    return null;
+  }
+  return group.filter((v) => {
+    return v.slug === slug;
+  })[0];
+}
+
+export const LookupItemInMetadata = (metadata, key) => {
+  if (!metadata) {
+    return null;
+  }
+  return metadata.filter((v) => {
+    return v.key === key;
+  })[0];
+}
